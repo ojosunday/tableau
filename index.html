@@ -12,9 +12,18 @@
         let myConnector = tableau.makeConnector();
 
         myConnector.getSchema = function (schemaCallback) {
-            const cols = [
-                { id: "customer_id", dataType: tableau.dataTypeEnum.string },
-                { id: "store_id", dataType: tableau.dataTypeEnum.string }
+            const cols = [ 
+                { id: "ADDRESS1", dataType: tableau.dataTypeEnum.string },
+				{ id: "ADDRESS2", dataType: tableau.dataTypeEnum.string },
+				{ id: "CITY", dataType: tableau.dataTypeEnum.string },
+				{ id: "COUNTY", dataType: tableau.dataTypeEnum.string },
+				{ id: "CUSTOMER_ID", dataType: tableau.dataTypeEnum.string },
+				{ id: "DISTRICT", dataType: tableau.dataTypeEnum.string },
+				{ id: "REGION", dataType: tableau.dataTypeEnum.string },
+				{ id: "STATE", dataType: tableau.dataTypeEnum.string },
+				{ id: "STORE_ID", dataType: tableau.dataTypeEnum.string },
+				{ id: "ZIP", dataType: tableau.dataTypeEnum.string },
+                { id: "ZONE", dataType: tableau.dataTypeEnum.string }
                 // Add more columns here based on your API
             ];
             let tableSchema = {
@@ -32,9 +41,18 @@
             .then(response => response.json())
             .then(data => {
                 // Convert your JSON to row array
-                let rows = data.map(item => ({
-                    customer_id: item.CUSTOMER_ID,
-                    store_id: item.STORE_ID
+                let rows = data.map(item => ({ 
+                    ADDRESS1: item.ADDRESS1,
+					ADDRESS2: item.ADDRESS2,
+					CITY: item.CITY,
+					COUNTY: item.COUNTY,
+					CUSTOMER_ID: item.CUSTOMER_ID,
+					DISTRICT: item.DISTRICT,
+					REGION: item.REGION,
+					STATE: item.STATE,
+					STORE_ID: item.STORE_ID,
+					ZIP: item.ZIP,
+                    ZONE: item.ZONE
                     // Add other fields as needed
                 }));
                 table.appendRows(rows);
