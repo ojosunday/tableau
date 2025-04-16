@@ -51,11 +51,12 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        const chunkSize = 1000;
+                        const chunkSize = 100;
+						const maxRows = 200; // Limit to test speed
                         let index = 0;
 
                         function loadChunk() {
-                            if (index >= data.length) {
+                            if (index >= maxRows) {
                                 tableau.reportProgress("All data loaded.");
                                 console.timeEnd("FetchTime");
                                 doneCallback();
