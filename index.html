@@ -35,7 +35,7 @@
         };
 
         myConnector.getData = function (table, doneCallback) {
-            fetch("https://flask-api.redforest-b880aba9.eastus.azurecontainerapps.io/item", {
+            fetch("https://flask-api.redforest-b880aba9.eastus.azurecontainerapps.io/location", {
                 headers: { "x-api-key": "3c4e642d15428eb4064c935f3450bd2d2acb27f6c5ebe341fefc76be058a5654" }
             })
             .then(response => response.json())
