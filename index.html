@@ -1,0 +1,51 @@
+(function () {
+    var myConnector = tableau.makeConnector();
+
+    myConnector.getSchema = function (schemaCallback) {
+        var cols = [
+            { id: "STORE_ID", dataType: tableau.dataTypeEnum.string },
+            { id: "CITY", dataType: tableau.dataTypeEnum.string },
+            // Add other fields...
+        ];
+
+        var tableSchema = {
+            id: "locationData",
+            alias: "Location Data from REST API",
+            columns: cols
+        };
+
+        schemaCallback([tableSchema]);
+    };
+
+    myConnector.getData = function (table, doneCallback) {
+        $.ajax({
+            url: "https://flask-api.redforest-b880aba9.eastus.azurecontainerapps.io/location",
+            headers: {
+                "x-api-key": "3c4e642d15428eb4064c935f3450bd2d2acb27f6c5ebe341fefc76be058a5654"
+            },
+            success: function (resp) {
+                var tableData = [];
+
+                for (var i = 0; i < resp.length; i++) {
+                    tableData.push({
+                        "STORE_ID": resp[i].STORE_ID,
+                        "CITY": resp[i].CITY,
+                        // Add other fields
+                    });
+                }
+
+                table.appendRows(tableData);
+                doneCallback();
+            }
+        });
+    };
+
+    tableau.registerConnector(myConnector);
+
+    $(document).ready(function () {
+        $("#submitButton").click(function () {
+            tableau.connectionName = "REST API Location Data";
+            tableau.submit();
+        });
+    });
+})();
