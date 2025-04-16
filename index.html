@@ -1,51 +1,55 @@
-(function () {
-    var myConnector = tableau.makeConnector();
 
-    myConnector.getSchema = function (schemaCallback) {
-        var cols = [
-            { id: "STORE_ID", dataType: tableau.dataTypeEnum.string },
-            { id: "CITY", dataType: tableau.dataTypeEnum.string },
-            // Add other fields...
-        ];
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple WDC</title>
+    <script src="https://connectors.tableau.com/libs/tableauwdc-2.3.latest.js"></script>
+</head>
+<body>
+    <h1>My REST API Connector</h1>
+    <button onclick="submit()">Load Data</button>
 
-        var tableSchema = {
-            id: "locationData",
-            alias: "Location Data from REST API",
-            columns: cols
+    <script>
+        let myConnector = tableau.makeConnector();
+
+        myConnector.getSchema = function (schemaCallback) {
+            const cols = [
+                { id: "customer_id", dataType: tableau.dataTypeEnum.string },
+                { id: "store_id", dataType: tableau.dataTypeEnum.string }
+                // Add more columns here based on your API
+            ];
+            let tableSchema = {
+                id: "myAPIData",
+                alias: "Customer Data",
+                columns: cols
+            };
+            schemaCallback([tableSchema]);
         };
 
-        schemaCallback([tableSchema]);
-    };
-
-    myConnector.getData = function (table, doneCallback) {
-        $.ajax({
-            url: "https://flask-api.redforest-b880aba9.eastus.azurecontainerapps.io/location",
-            headers: {
-                "x-api-key": "3c4e642d15428eb4064c935f3450bd2d2acb27f6c5ebe341fefc76be058a5654"
-            },
-            success: function (resp) {
-                var tableData = [];
-
-                for (var i = 0; i < resp.length; i++) {
-                    tableData.push({
-                        "STORE_ID": resp[i].STORE_ID,
-                        "CITY": resp[i].CITY,
-                        // Add other fields
-                    });
-                }
-
-                table.appendRows(tableData);
+        myConnector.getData = function (table, doneCallback) {
+            fetch("https://flask-api.redforest-b880aba9.eastus.azurecontainerapps.io/item", {
+                headers: { "x-api-key": "3c4e642d15428eb4064c935f3450bd2d2acb27f6c5ebe341fefc76be058a5654" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Convert your JSON to row array
+                let rows = data.map(item => ({
+                    customer_id: item.CUSTOMER_ID,
+                    store_id: item.STORE_ID
+                    // Add other fields as needed
+                }));
+                table.appendRows(rows);
                 doneCallback();
-            }
-        });
-    };
+            });
+        };
 
-    tableau.registerConnector(myConnector);
+        tableau.registerConnector(myConnector);
 
-    $(document).ready(function () {
-        $("#submitButton").click(function () {
-            tableau.connectionName = "REST API Location Data";
+        function submit() {
+            tableau.connectionName = "My API Connection";
             tableau.submit();
-        });
-    });
-})();
+        }
+    </script>
+</body>
+</html>
+
