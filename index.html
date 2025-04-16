@@ -5,7 +5,7 @@
     <script src="https://connectors.tableau.com/libs/tableauwdc-2.3.latest.js"></script>
 </head>
 <body>
-    <h1>My REST API Connector</h1>
+    <h1>Spacee REST API Connector</h1>
     <button onclick="submit()">Load Data</button>
 
     <script>
@@ -28,7 +28,7 @@
             ];
             let tableSchema = {
                 id: "myAPIData",
-                alias: "Customer Data",
+                alias: "Location Data",
                 columns: cols
             };
             schemaCallback([tableSchema]);
